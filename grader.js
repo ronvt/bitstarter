@@ -55,11 +55,13 @@ var checkHtmlFile = function(htmlfile, checksfile) {
         out[checks[ii]] = present;
     }
     var outJson = JSON.stringify(out, null, 4);
+    console.log("From file\n\n");
     console.log(outJson);
 };
 
 var checkHtmlUrl =  function (url, checksfile) {
     rest.get(url).on('complete', function (result) {
+	console.log("From url\n\n");
 	$ = cheerio.load(result);
 	var checks = loadChecks(checksfile).sort();
 	var out = {};
@@ -84,10 +86,10 @@ if(require.main == module) {
         .option('-u, --url [url]', 'url to html file')
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .parse(process.argv);
-    if(program.file != null) {
-	checkHtmlFile(program.file, program.checks);
-    } else {
+    if(program.url != null) {
 	checkHtmlUrl(program.url, program.checks);
+    } else {
+	checkHtmlFile(program.file, program.checks);
     }
 } else {
     exports.checkHtmlFile = checkHtmlFile;
